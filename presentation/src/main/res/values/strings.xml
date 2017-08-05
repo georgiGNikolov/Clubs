@@ -11,4 +11,6 @@
     <string name="send_email_action_lbl">Send email</string>
     <string name="clubs_toolbar_lbl">Clubs</string>
     <string name="toggle_view">Toggle view</string>
+    <string name="implicit_intent_error">Unable to find an app to perform this action!</string>
+    <string name="fb_url">http://facebook.com/</string>
 </resources>

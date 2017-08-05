@@ -2,6 +2,7 @@ package com.xcomputers.clubs;
 
 import android.app.Application;
 
+import com.xcomputers.clubs.clubs.util.DbHelper;
 import com.xcomputers.networking.base.RetrofitManager;
 
 /**
@@ -16,6 +17,6 @@ public class ClubsApplication extends Application {
     public void onCreate() {
         super.onCreate();
         RetrofitManager.getInstance().init(BASE_URL);
-        //TODO init database here
+        DbHelper.init(this);
     }
 }

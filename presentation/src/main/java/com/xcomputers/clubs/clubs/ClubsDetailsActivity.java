@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.xcomputers.clubs.R;
@@ -51,19 +52,32 @@ public class ClubsDetailsActivity extends AppCompatActivity {
                     "mailto", club.getEmail(), null));
             emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Subject");
             emailIntent.putExtra(Intent.EXTRA_TEXT, "Body");
-            startActivity(Intent.createChooser(emailIntent, getString(R.string.send_email_action_lbl)));
+            Intent chooser = Intent.createChooser(emailIntent, getString(R.string.send_email_action_lbl));
+            if(getPackageManager().resolveActivity(chooser, 0) != null) {
+                startActivity(chooser);
+            }else{
+                Toast.makeText(this, R.string.implicit_intent_error, Toast.LENGTH_SHORT).show();
+            }
         });
         fbBtn.setOnClickListener(v -> {
-            String url = "http://facebook.com/";
+            String url = getString(R.string.fb_url);
             url = url.concat(club.getFbUrl());
             Intent fbIntent = new Intent(Intent.ACTION_VIEW);
             fbIntent.setData(Uri.parse(url));
-            startActivity(fbIntent);
+            if(getPackageManager().resolveActivity(fbIntent, 0) != null) {
+                startActivity(fbIntent);
+            }else{
+                Toast.makeText(this, R.string.implicit_intent_error, Toast.LENGTH_SHORT).show();
+            }
         });
         callBtn.setOnClickListener(v -> {
             //The task did not specify whether this action should be DIAL or CALL so I arbitrarily chose DIAL
             Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", club.getPhoneNumber(), null));
-            startActivity(intent);
+            if(getPackageManager().resolveActivity(intent, 0) != null) {
+                startActivity(intent);
+            }else{
+                Toast.makeText(this, R.string.implicit_intent_error, Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
