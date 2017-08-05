@@ -72,6 +72,7 @@ public class ClubsPresenter extends RxPresenter<ClubsDisplayView> {
                                     //there was a problem with the request
                                     if (throwable instanceof ConnectException || throwable instanceof UnknownHostException) {
                                         //this either means there is no internet connection or the server is down
+                                        // we display a message with a retry button which will initiate the same flow again
                                         clubsDisplayView.displayNoInternetErrorMessage();
                                     } else {
                                         //some other kind of exception was thrown somewhere in the chain
@@ -142,9 +143,13 @@ public class ClubsPresenter extends RxPresenter<ClubsDisplayView> {
     private void checkDatesAndUpdate(List<Club> list){
         //we loop through all the enries and check if the entry from the server has been updated later than the entry we have
         // if so then we need to update our data
-        for(int i = 0; i < clubList.size(); i++){
-            if(clubList.get(i).getUpdatedAt().before(list.get(i).getUpdatedAt())){
-                DbHelper.getInstance().updateData(list.get(i));
+        for(Club fromServer : list) {
+            for (Club fromCache : clubList) {
+                if(fromCache.getId() == fromServer.getId()){
+                    if(fromCache.getUpdatedAt().before(fromServer.getUpdatedAt())){
+                        DbHelper.getInstance().updateData(fromServer);
+                    }
+                }
             }
         }
     }
