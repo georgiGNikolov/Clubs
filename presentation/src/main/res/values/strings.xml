@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Clubs</string>
+    <string name="lbl_action_retry">Retry</string>
+    <string name="lbl_no_internet_error">Unable to connect. Please ensure you have a viable internet connection!</string>
+    <string name="lbl_no_data">No data is available at the moment.</string>
+    <string name="club_name">Club name:</string>
+    <string name="send_email_lbl">send email</string>
+    <string name="call_us">Call us</string>
+    <string name="fb_btn_lbl">Open FB page</string>
+    <string name="created_at">Created at:</string>
+    <string name="send_email_action_lbl">Send email</string>
+    <string name="clubs_toolbar_lbl">Clubs</string>
+    <string name="toggle_view">Toggle view</string>
+</resources>
