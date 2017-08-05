@@ -41,9 +41,7 @@ public class ClubsPresenter extends RxPresenter<ClubsDisplayView> {
                //great! we have data in the database! we show the user this data and we
                // fire a network request silently to check if there is any new data or if the existing data needs updating
                this.clubList = clubs;
-                doWhenViewBound(clubsDisplayView -> {
-                clubsDisplayView.displayClubs(clubs);
-                });
+                doWhenViewBound(clubsDisplayView -> clubsDisplayView.displayClubs(clubs));
                updateSilently();
             }else{
                //There is no data in the memory cache and the database is empty as well
@@ -107,14 +105,11 @@ public class ClubsPresenter extends RxPresenter<ClubsDisplayView> {
         }else{
             if(list.size() > clubList.size()){
                 //The new items are more than the items we have. We loop to see which items we don't have
-                List<Club> toAdd = new ArrayList<>();
                 for(Club club : list){
                     if(!clubList.contains(club)){
-                        toAdd.add(club);
+                        //Add said items to the database
+                        DbHelper.getInstance().addData(club);
                     }
-                }
-                for(Club club : toAdd){
-                    DbHelper.getInstance().addData(club);
                 }
                 //Check if any of the old entries need updating
                 checkDatesAndUpdate(list);
@@ -122,15 +117,11 @@ public class ClubsPresenter extends RxPresenter<ClubsDisplayView> {
                 this.clubList = DbHelper.getInstance().getAllData();
             }else{
                 //The items we have are more than the service returns. We need to see which items we need to delete
-                List<Club> toDelete = new ArrayList<>();
                 for(Club club : clubList){
                     if(!list.contains(club)){
-                        toDelete.add(club);
+                        //We delete said items
+                        DbHelper.getInstance().deleteData(club);
                     }
-                }
-                //We delete said items
-                for(Club club : toDelete){
-                    DbHelper.getInstance().deleteData(club);
                 }
                 //We check if the rest of the items are up to date and update them if needed
                 checkDatesAndUpdate(list);
