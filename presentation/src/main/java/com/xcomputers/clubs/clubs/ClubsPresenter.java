@@ -52,9 +52,10 @@ public class ClubsPresenter extends RxPresenter<ClubsDisplayView> {
                         .observeOn(AndroidSchedulers.mainThread())
                         .compose(deliver())
                         .subscribe(delivery -> delivery.split(
-                                (clubsDisplayView, clubsApiResponses) -> {
+                                (clubsDisplayView, clubsApiResponse) -> {
                                     //we have a response
-                                    this.clubList = clubsApiResponses;
+                                    //we update our cache
+                                    this.clubList = clubsApiResponse;
                                     clubsDisplayView.hideLoading();
                                     if(clubList.isEmpty()){
                                         //the server returned an empty array
@@ -62,8 +63,8 @@ public class ClubsPresenter extends RxPresenter<ClubsDisplayView> {
                                     }else{
                                         //there is a non empty response
                                         // we show the data to the user and we write the data in the database for future use
-                                        clubsDisplayView.displayClubs(clubsApiResponses);
-                                        addInitialEnties(clubsApiResponses);
+                                        clubsDisplayView.displayClubs(clubsApiResponse);
+                                        addInitialEnties(clubsApiResponse);
                                     }
                                 }, (clubsDisplayView, throwable) -> {
                                     clubsDisplayView.hideLoading();
@@ -113,8 +114,6 @@ public class ClubsPresenter extends RxPresenter<ClubsDisplayView> {
                 }
                 //Check if any of the old entries need updating
                 checkDatesAndUpdate(list);
-                //Refresh the memory cash with the new database data
-                this.clubList = DbHelper.getInstance().getAllData();
             }else{
                 //The items we have are more than the service returns. We need to see which items we need to delete
                 for(Club club : clubList){
@@ -125,10 +124,11 @@ public class ClubsPresenter extends RxPresenter<ClubsDisplayView> {
                 }
                 //We check if the rest of the items are up to date and update them if needed
                 checkDatesAndUpdate(list);
-                //We update the cache with the latest data from the database
-                this.clubList = DbHelper.getInstance().getAllData();
+
             }
         }
+        //we update our memory cache
+        this.clubList = list;
     }
 
     private void checkDatesAndUpdate(List<Club> list){
